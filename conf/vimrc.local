@@ -1,0 +1,506 @@
+au!
+if has("syntax")
+        let mysyntaxfile = "~/.vim/syntax.vim"
+        let myscriptsfile = "~/.vim/scripts.vim"
+        let myfiletypefile = "~/.vim/filetypes.vim"
+        syntax on
+endif
+"
+au BufWritePost .vimrc :so <sfile>
+"
+" autocommands
+"
+au BufReadPost * if line("'\"") | exe("normal `\"") | endif
+"
+au BufNewFile *.module,*.install    setf php
+au BufEnter *.module,*.install  setf php
+au BufEnter *.sql,*.pm,*.md,*.mc,configure,*.in,*.pref,*.def,.*rc,*[Mm]akefile*,*.c,*.C,*.cc,*.h,*.pl,*.cgi,*.java,*.dat set fo=crqb2 cin sm noet pm=.orig tw=78
+au BufEnter *.sh,*.vim set fo=crqb2 sm
+au BufLeave *.sql,*.pm,*.md,*.mc,configure,*.in,.*rc,*[Mm]akefile*,*.c,*.C,*.cc,*.h,*.pl,*.cgi,*.java,*.dat,*.css set fo=tcq2 nocin nosm pm= tw=72
+au BufEnter .folloup,.article,*.txt,*.t,*README*,Rea*,.art*,mutt*,.letter set fo=tcq2 nosm nocin et pm= tw=72
+" au BufLeave *.html set fo=tc2 tw=72 noai
+" au BufEnter *.html set fo=tcq2 tw=78 ai
+" au BufRead * normal`"zz<CR>
+" au BufEnter ChangeLog.txt 0r!date +\%-d/\%m/\%y<CR>
+" au BufNewFile *.t 0r!date +\%-d/\%m/\%y<CR>
+" au BufNewFile *.t 0|normal iQuébec, le <ESC><CR>
+" au BufNewFile *.t 0:right
+au BufNewFile *.pl,*.cgi 0r ~/txt/skeleton.pl|:!chmod 755 %
+au BufNewFile *.sh 0r ~/txt/skeleton.sh
+au BufNewFile *.m[cd] 0r ~/txt/skeleton.mc
+" au BufWritePost *.sh,*.pl,*.cgi :!chmod 755 %<CR>
+au BufWritePost .Xresources,.Xdefaults :!xrdb -merge %
+au BufNewFile *.html,*.htm 0r ~/txt/skeleton.html
+au BufNewFile *.java 0r ~/txt/skeleton.java
+au BufNewFile *.java %!sed s/file/%</g
+
+" auto unload help files
+" au BufLeave /usr/local/share/vim/doc/*.txt :bd
+"##############################################################################
+" Java mappings an abbreviations
+"##############################################################################
+iab ISS import javax.swing.*;<ESC>2h
+iab IST import javax.swing.text.*;<ESC>2h
+iab ISE import javax.swing.event.*;<ESC>2h
+iab IJA import java.awt.*;<ESC>2h
+iab IJP import java.applet.*;<ESC>2h
+iab IJU import java.util.*;<ESC>2h
+iab IJN import java.net.*;<ESC>2h
+iab IJI import java.io.*;<ESC>2h
+iab SOP System.out.println("");<LEFT><LEFT><LEFT>
+iab SEP System.err.println("");<LEFT><LEFT><LEFT>
+iab TRY try {<CR>} catch (Exception e) {<CR>e.printStackTrace();<CR>}
+iab MAIN public static void main(String[] arg) {<CR><CR>}<ESC>O
+"
+map ,jf :n <cfile><.java<CR>
+" map ,je :!chmod 755 %<.class<CR>:!java %<<CR>
+map ,je :exe java_jit<CR>
+" map ,jv :!java %<<CR>
+map ,jv :exe java<CR>
+map ,j2 :exe java2<CR>
+" map ,jd :w<CR>:!jdb %<.class<CR>
+map ,jq :!javac -verbose Q*.java<CR>
+map ,jm :!guavac -d . %<CR>
+map ,jg :!grep -E '^[^/]{2}.*\b<cword>\b' *.java<CR>
+" map ,ja :exe javac_all_jit<CR>
+map ,ja :exe javac_all<CR>
+" map ,jj :w<CR>:!javac -d . %<CR>
+map ,jo :!javac -O -verbose *.java<CR><CR>
+map ,jj :exe javac . expand("%")<CR>
+map ,j1 :exe javac2 . expand("%")<CR>
+map ,jp :!javac % &<CR>
+" map ,jh :exe javac . " -nowarn " . expand("%") . " &"<CR><CR>
+map ,jh :exe javac . " " . expand("%") . " &"<CR><CR>
+" map ,jh :w<CR>:!java -Djava.compiler=tya sun.tools.javac.Main -d . % &<CR>
+" map ,jt :!java -Djava.compiler=tya -ms8m sun.tools.javac.Main -d . %<CR>
+map ,jt :exe javac_all_jit<CR>
+" map ,jk :!killall -q java_ns<CR>,jh<CR>
+map ,jk :!jikes -d . %<CR>
+map ,jd miyypk,jc`ij
+
+map ,jc :s+^.\+$+#&+<CR>
+map ,jn :s%^\(\s*\)#%\1%<CR>
+map ,pc :s+^.\+$+//&+<CR>
+map ,pn :s%^\(\s*\)//%\1%<CR>
+
+map ,qll :s/\"[^\"]*[^ \"]*$/\0\"/<CR>
+map ,qln :s/\(\".*\)\"$/\1/<CR>
+"##############################################################################
+" Perl Mappings
+"##############################################################################
+map ,pe :!chmod 755 %<CR>:!%<CR>
+map ,pd yypk,pcj^
+" map ,pc :s/^\(<\)\(%\)\(.+\)\\|^\(%\=\)\(.\+\)/\2\3# \1\2\3\4/<CR>
+map ,pi :!perl -pi.bak -e 's///g' %
+map ,sc :s/^\(%\=\)\(.\+\)/\1; \2/<CR>
+map ,sn :s/^\([%        ]*\); \=\(.*\)/\1\2/<CR>
+"##############################################################################
+" mail mappings
+"##############################################################################
+map ,rr S<CR><up><CR>
+map ,mc :s%^%> &%<CR>w
+map ,mn :s%^\([^\i]*\)> %\1%<CR>
+" make bold
+vmap ,mbb <ESC>`>a<CR>_<ESC>mb`<i<CR>_<ESC>ma:'a,'b-s/\(.\)/\1<C-V><C-H>\1/g<CR>'bkA <ESC>Jh2x'akA <ESC>Jh4x
+" make underline
+vmap ,muu <ESC>`>a<CR>_<ESC>mb`<i<CR>_<ESC>ma:'a,'b-s/\(.\)/_<C-V><C-H>\1/g<CR>'bkA<ESC>Jh2x'akA <ESC>Jh4x
+" nm _s "0P`]ld
+"##############################################################################
+" HTML mappings
+"##############################################################################
+iab AHA <A HREF=""></A>
+map ,hc :s#^\(.\+\)$#<!-- \1 -->#<CR>
+map ,hdc yypk,hcj^
+" vmap ,hc <ESC>`<:s#^#<!-- #<CR>`>:s#$# -->#<CR>
+vmap ,hc <ESC>`>a --><ESC>`<i<!-- <ESC>
+map ,hn :s#^\([         ]*\)<!-- \(.*\) -->$#\1\2#<CR>
+map ,hsp e<ESC>Bi<SUP><ESC>Ea</SUP><ESC>B
+vmap ,hsp <ESC>`>a</SUP><ESC>`<i<SUP><ESC>
+map ,hwf e<ESC>Bi<FONT SIZE="" COLOR="#000000"><ESC>Ea</FONT><ESC>B
+map ,hwi e<ESC>Bi<I><ESC>Ea</I><ESC>B
+map ,hwb e<ESC>Bi<B><ESC>Ea</B><ESC>B
+map ,hfs ^i<FONT SIZE="+1"><ESC>$a</FONT><ESC>B
+map ,hfc ^i<FONT COLOR="#000000"><ESC>$a</FONT><ESC>B
+
+
+map ,ss ^<CR>isession_start();<CR><ESC>B
+map ,htb ^i<td>&nbsp;</td><CR><td>&nbsp;</td><CR><ESC>B
+" map ,hdd ^i<DD><ESC>$a</DD><ESC>B
+map ,hdd {wi<DD><ESC>}bA</DD><ESC>gqapB
+map ,hdt {wi<DT><ESC>}bA</DT><ESC>gqapB
+map ,him ^i<IMG SRC=\"\"><ESC>$a</P><ESC>B
+map ,htt ^i<TT><ESC>$a</TT><ESC>B
+" map ,hli :s#\p.*\p#<LI>&</LI>#
+map ,hft {wi<FONT SIZE="" COLOR="#284d49"><ESC>}bA</FONT><ESC>gqapB
+vmap ,hft <ESC>`>a</FONT><ESC>`<i<FONT SIZE="" COLOR="#284d49"><ESC>
+map ,hli {wi<LI><ESC>}bA</LI><ESC>gqapB
+" vmap ,hli <ESC>`>a</LI><ESC>`<i<LI><ESC>
+vmap ,hli <ESC>I<LI><ESC>$a</LI><ESC>
+map ,hbb :s#\p.*\p#<B>&</B>#
+vmap ,hbb <ESC>`>a</B><ESC>`<i<B><ESC>
+map ,hwp ^i<NOWRAP><ESC>$a</NOWRAP><ESC>B
+vmap ,hwp <ESC>`>a</NOWRAP><ESC>`<i<NOWRAP><ESC>
+map ,huu :s#\p.*\p#<U>&</U>#
+vmap ,huu <ESC>`>a</U><ESC>`<i<U><ESC>
+map ,hub :s#\p.*\p#<U><B>&</B></U>#
+vmap ,hub <ESC>`>a</B></U><ESC>`<i<U><B><ESC>
+map ,hlp {wi<LI><ESC>}ba</LI><ESC>gqapB
+map ,hpc ^i<P ALIGN=CENTER><ESC>$a</P><ESC>B
+map ,hpp {wi<P><ESC>}bA</P><ESC>gqapB
+vmap ,hpp <ESC>`>a</P><ESC>`<i<P><ESC>
+map ,hh2 {wi<H2 ALIGN=CENTER><ESC>}bA</H2><ESC>gqapB
+vmap ,hh2 <ESC>`>a</H2><ESC>`<i<H2 ALIGN=CENTER><ESC>
+map ,hbr {wi<NOBR><ESC>}bA</NOBR><ESC>gqapB
+vmap ,hbr <ESC>`>a</NOBR><ESC>`<i<NOBR><ESC>
+map ,hii {wi<I><ESC>}bA</I><ESC>gqapB
+vmap ,hii <ESC>`>a</I><ESC>`<i<I><ESC>
+map ,hpc {wi<P ALIGN=CENTER><ESC>}bA</P><ESC>gqapB
+vmap ,hpc <ESC>`>a</P><ESC>`<i<P ALIGN=CENTER><ESC>
+" map ,hdd :s/<[^> A]*>//g<CR>
+map ,hdp { :.,/^[ \t]*$/- s/<[^> A]*>//g <CR>
+vmap ,hdp :s/<[^> A]*>//g<CR>
+map ,hsk gg:r ~/txt/skeleton.html<CR>
+vmap ,hdt <ESC>`>a</DT><ESC>`<^i<DT><ESC>
+vmap ,hdd <ESC>`>a</DD><ESC>`<^i<DD><ESC>
+vmap ,hah <ESC>`>a</A><ESC>`<i<A HREF=""><ESC>?\"\"
+vmap ,han <ESC>`>a</A><ESC>`<i<A NAME=""><ESC>?\"\"
+"
+" C mappings
+"
+iab COP cout<<""<<endl;
+map ,cf :n <cfile><.cc<CR>
+iab FPF fprintf(stdout, "\n");
+map ,ct :!ctags *.[ch]<CR>
+map ,cp <ESC>'<i<HOME>/*<ESC>:'<+,'>-s/^.*/ * &/<CR>'>0a*/<ESC>
+" map ,cn :s#^\([ \t]*\)/\*\(.*\)\*/$#\1\2#<CR>
+map ,cd :s#^#/\*\*\r\*\r\*\r\*/\r#<CR>
+map ,cj :s#^\s*\(.\+\)$#/\*\* \1 \*/#<CR>
+vmap ,cc <ESC>`<:s#^#/*#<CR>`>:s#$#*/#<CR>
+map ,mk :mak %<<CR>
+" map ,gg :!g++ % -o %< -I /usr/include/g++<CR>
+map ,ce :!%< <CR>
+"
+" Misc.
+"
+" capitalize first letter
+" inoremap <Space> <Space><Left><C-O>mm<C-O>(<C-O>gUl<C-O>`m<Right>
+"
+map Q gq
+" noremap <C-^> <C-^>`"
+map ,rs :exe "!rm -i ".expand("%:p:h")."/.".expand("%:t").".sw?"<CR>
+map ,cw :%s/<cword>//gc<left><left><left>
+" map ,sp :r ~/txt/spam_form_letter.t.gz<CR><CR>
+" map ,pa :set invpaste<CR>
+map ,wl :!weblint %<CR>
+" map ,fl :r ~/txt/joke.flame<CR>
+map ,mm :!mutt -z<CR><CR>
+map ,z  :marks<CR>
+map ,jb :r ~/txt/cvus_short.txt<CR>:w<CR>
+map ,cvu :r ~/txt/cvus.t.gz<CR>
+" map ,pr :!mv %<.bak %<CR>:e!<CR><CR>
+" map ,o :w<CR>:e ~/.old.vimrc<CR>
+" map ,v :w<CR>:e ~/.vimrc<CR>
+map ,vv :n ~/.vimrc<CR>
+map ,vc :s+^+\" +<CR>w
+map ,vd yypk,vcj^
+map ,vn :s%^\([^\i]*\)\" %\1%<CR>
+" map ,mkv :mkv! ~/.vimrc<CR>:source ~/.vimrc<CR>
+" map ,cc :w<CR>:!cc -o %< %<CR>
+" map ,ma :marks<CR>
+map ,ce :!chmod 755 %<<CR>:!%<<CR>
+map ,nu :set nu<CR>
+map ,no :set nonu<CR>
+" map ,ii :!newsbody -qs -n % -p ispell \%f<CR>:e<CR>:w<CR><CR>
+" map ,ii :!newsbody -qs -n % -p ispell -- -d american \%f<CR>:e<CR>:w<CR><CR>
+map ,if :!newsbody -qs -n % -p ispell -- -d francais \%f<CR>:e<CR>:w<CR><CR>
+" map ,ii :!newsbody -qs -n % -p aspell check \%f<CR>
+" map ,uv :w %<CR>:so ~/.vimrc<CR><CR>:!cp % /dosd/progs/vim/unix%:t<CR><CR>:e#<CR>
+" map ,fl !$figlet -f lean<CR>
+map ,fs !$figlet -f slant<CR>
+map ,fg !$figlet<CR>
+map ,fa !Gfmt<CR>
+map ,ff /wrote:/<CR>j0!}par<CR>
+map ,l :files<CR>
+" map ,ke :!xmodmap ~/bin/us.xmap &<CR>
+" map ,kf :!xmodmap ~/bin/cf.xmap &<CR>
+map _f :set ai<CR>{O<ESC>}{)^Wi  <CR>    <ESC>gq}{dd5lDJ
+map ,uu :1,$!uuenview -a
+map ,qw i"<ESC>ea"<ESC>B
+map ,me yapa></<ESC>Ea><ESC>Bi<<ESC>/><<CR>
+map ,qp {jma}kmb:'a,'bs/^/> /<CR>
+map ,dp {jma}kmb:'a,'bs/^> *//<CR>
+map ,si :!sizeup %<CR>:e<CR><CR>
+map ,s2 :r ~/.sigbiz<CR>
+" map ,s1 :r ~/.sig<CR>
+" map ,s3 :r ~/.sigfun<CR>
+" ab lenght length
+" ab widht width
+ab FOR for (int i = 0; i < .length; i++) {<ESC>5bi<BS>
+ab FOE for (Enumeration e = ht.elements(); e.hasMoreElements();) {
+ab FOS for (StringTokenizer st = new StringTokenizer(); st.hasMoreTokens();) {
+ab FOJ for (int j = 0; j < .length; j++) {<ESC>5bi<BS>
+ab FOH for (int h = 0; h < .length; h++) {<ESC>5bi<BS>
+"
+" Function keys
+"
+map <F8> :!ps wr<CR>
+imap <F8> <ESC>:!ps wr<CR>
+map <F12> 
+imap <F12> <ESC>a
+" map <F2> :!xmodmap ~/bin/us.xmap &<CR><CR>
+" map <F3> :so ~/.vim/keymap.vim<CR>
+" map <F3> :!xmodmap ~/bin/cf.xmap &<CR><CR>
+" imap <F2> <ESC>:!xmodmap ~/bin/us.xmap &<CR><CR>a
+" imap <F3> <ESC>:!xmodmap ~/bin/cf.xmap &<CR><CR>a
+map <F4> :set invpaste<CR>
+imap <F4> <ESC>:set paste!<CR>a
+map <F1> J:w<CR>
+imap <F1> <ESC><Up>J:w<CR>
+map <F5> '"zz
+imap <F5> <ESC>'"zzi
+map <F6> :bd<CR>
+map <F2> :w<CR>
+map <F7> mz:%s/[ \r\t]*$//<CR>`z
+map ,tt ^i$txt.="<ESC>B
+imap <F7> <ESC>mz:%s/[ \r\t]*$//<CR>`zi " clean all spurious whitespace
+map <F10> mz:g/^\s*\/\//normal,jn==,jc<CR>`z " re-indent comments
+imap <F6> <ESC>:bd<CR>i
+map [25$ <S-Up>
+map [29$ <S-Down>
+imap [25$ <S-Up>
+imap [29$ <S-Down>
+"
+" command line remaps
+"
+cno    <Home>
+cno    <End>
+"
+" settings
+"
+
+" set t_Co=16
+" set t_#4=[32$
+" set t_%i=[33$
+" set t_kD=[3~
+" set t_kh=[7~
+" set t_@7=[8~
+
+" set t_AB=[%?%p1%{8}%<%t%p1%{40}%+%e%p1%{92}%+%;%dm
+" set t_AF=[%?%p1%{8}%<%t%p1%{30}%+%e%p1%{82}%+%;%dm
+" set t_Co=8
+" set t_Sf=<Esc>[3%dm
+" set t_Sb=<Esc>[4%dm
+" set t_kD=
+" set nows
+" set hlsearch
+" set splitbelow
+set autoindent
+set nobackup
+set whichwrap+=<,>,[,],h,l
+" set fileformats=unix
+set highlight=@n,sr,Sr,mb,rn
+" set complete=.,b,u
+" set helpfile=/usr/local/share/vim/doc/help.txt
+" set infercase
+" set cinoptions=:0,g0
+" set switchbuf=useopen,split
+set cinkeys-=0#
+set ignorecase
+set smartcase
+set showcmd
+set path+=/usr/include/postgresql
+set suffixes+=.orig
+set viminfo='500,\"1000
+set history=1000
+set autoindent
+set autowrite
+set backspace=2
+set incsearch
+" set langmap=é/,·>,ç]
+set mouse=h
+set scrolloff=3
+set shiftwidth=4
+set shortmess=aotI
+set showmatch
+set tabstop=4
+set textwidth=72000
+" set vb t_vb=
+set cpoptions+=$
+set cpoptions-=a
+set ruler
+set nojs
+set ttymouse=xterm
+" set wildmenu
+set wildmode=list:longest
+" set wildmode=longest:full
+set pastetoggle=<F4>
+set wildignore+=*.o,*.orig,*.bak,*.class,CVS
+if has("gui")
+        set gcr=a:blinkon0
+        set guioptions=a
+        set guifont=-misc-fixed-medium-r-normal-*-*-120-*-*-c-*-iso8859-1
+endif
+"
+" Functions
+"
+func! Spam()
+        exec ":%!spam.pl"
+endfunc
+" func! Spam()
+"       normal gg
+"       let i = 1
+"       while getline(i) !~ "by quesse\.pair\.com" && getline(i) !~ "by
+"               let i = i + 1
+"               if i >= line("$")
+"                       echo "not found"
+"                       return
+"               endif
+"       endw
+"       exec "/by quesse.pair.com"
+"       exec "normal 04W2T.yWggj"
+"       exec "s/.*/To: postmaster@/"
+"       exec "normal $p"
+"       exec "/Subject:"
+"       exec "s/Subject: /&SPAM COMPLAINT /"
+" endfunc
+
+func! Conv()
+        exec "%s/Ê/é/ge"
+        exec "%s/É/è/ge"
+        exec "%s/Ë/ê/ge"
+        exec "%s/Á/à/ge"
+        exec "%s/Æ/ô/ge"
+        exec "%s/Ú/ç/ge"
+        exec "%s/×/â/ge"
+        exec "%s/Ó/ñ/ge"
+        exec "%s/s/ /ge"
+        exec "%s/?/'/ge"
+        exec "%s/?/.../ge"
+        exec "%s/?/\"/ge"
+        exec "%s/?/\"/ge"
+        exec "%s/*/-/ge"
+        exec "%s/?/oe/ge"
+endfunc
+"
+" ========================================================================
+" ASCII tables - you may need them some day.  Save them to a file!
+" ========================================================================
+"
+" ASCII Table - | octal value - name/char |
+"
+" |000 nul|001 soh|002 stx|003 etx|004 eot|005 enq|006 ack|007 bel|
+" |010 bs |011 ht |012 nl |013 vt |014 np |015 cr |016 so |017 si |
+" |020 dle|021 dc1|022 dc2|023 dc3|024 dc4|025 nak|026 syn|027 etb|
+" |030 can|031 em |032 sub|033 esc|034 fs |035 gs |036 rs |037 us |
+" |040 sp |041  ! |042  " |043  # |044  $ |045  % |046  & |047  ' |
+" |050  ( |051  ) |052  * |053  + |054  , |055  - |056  . |057  / |
+" |060  0 |061  1 |062  2 |063  3 |064  4 |065  5 |066  6 |067  7 |
+" |070  8 |071  9 |072  : |073  ; |074  < |075  = |076  > |077  ? |
+" |100  @ |101  A |102  B |103  C |104  D |105  E |106  F |107  G |
+" |110  H |111  I |112  J |113  K |114  L |115  M |116  N |117  O |
+" |120  P |121  Q |122  R |123  S |124  T |125  U |126  V |127  W |
+" |130  X |131  Y |132  Z |133  [ |134  \ |135  ] |136  ^ |137  _ |
+" |140  ` |141  a |142  b |143  c |144  d |145  e |146  f |147  g |
+" |150  h |151  i |152  j |153  k |154  l |155  m |156  n |157  o |
+" |160  p |161  q |162  r |163  s |164  t |165  u |166  v |167  w |
+" |170  x |171  y |172  z |173  { |174  | |175  } |176  ~ |177 del|
+"
+" ========================================================================
+" ASCII Table - | decimal value - name/char |
+"
+" |000 nul|001 soh|002 stx|003 etx|004 eot|005 enq|006 ack|007 bel|
+" |008 bs |009 ht |010 nl |011 vt |012 np |013 cr |014 so |015 si |
+" |016 dle|017 dc1|018 dc2|019 dc3|020 dc4|021 nak|022 syn|023 etb|
+" |024 can|025 em |026 sub|027 esc|028 fs |029 gs |030 rs |031 us |
+" |032 sp |033  ! |034  " |035  # |036  $ |037  % |038  & |039  ' |
+" |040  ( |041  ) |042  * |043  + |044  , |045  - |046  . |047  / |
+" |048  0 |049  1 |050  2 |051  3 |052  4 |053  5 |054  6 |055  7 |
+" |056  8 |057  9 |058  : |059  ; |060  < |061  = |062  > |063  ? |
+" |064  @ |065  A |066  B |067  C |068  D |069  E |070  F |071  G |
+" |072  H |073  I |074  J |075  K |076  L |077  M |078  N |079  O |
+" |080  P |081  Q |082  R |083  S |084  T |085  U |086  V |087  W |
+" |088  X |089  Y |090  Z |091  [ |092  \ |093  ] |094  ^ |095  _ |
+" |096  ` |097  a |098  b |099  c |100  d |101  e |102  f |103  g |
+" |104  h |105  i |106  j |107  k |108  l |109  m |110  n |111  o |
+" |112  p |113  q |114  r |115  s |116  t |117  u |118  v |119  w |
+" |120  x |121  y |122  z |123  { |124  | |125  } |126  ~ |127 del|
+"
+" ========================================================================
+" ASCII Table - | hex value - name/char |
+"
+" | 00 nul| 01 soh| 02 stx| 03 etx| 04 eot| 05 enq| 06 ack| 07 bel|
+" | 08 bs | 09 ht | 0a nl | 0b vt | 0c np | 0d cr | 0e so | 0f si |
+" | 10 dle| 11 dc1| 12 dc2| 13 dc3| 14 dc4| 15 nak| 16 syn| 17 etb|
+" | 18 can| 19 em | 1a sub| 1b esc| 1c fs | 1d gs | 1e rs | 1f us |
+" | 20 sp | 21  ! | 22  " | 23  # | 24  $ | 25  % | 26  & | 27  ' |
+" | 28  ( | 29  ) | 2a  * | 2b  + | 2c  , | 2d  - | 2e  . | 2f  / |
+" | 30  0 | 31  1 | 32  2 | 33  3 | 34  4 | 35  5 | 36  6 | 37  7 |
+" | 38  8 | 39  9 | 3a  : | 3b  ; | 3c  < | 3d  = | 3e  > | 3f  ? |
+" | 40  @ | 41  A | 42  B | 43  C | 44  D | 45  E | 46  F | 47  G |
+" | 48  H | 49  I | 4a  J | 4b  K | 4c  L | 4d  M | 4e  N | 4f  O |
+" | 50  P | 51  Q | 52  R | 53  S | 54  T | 55  U | 56  V | 57  W |
+" | 58  X | 59  Y | 5a  Z | 5b  [ | 5c  \ | 5d  ] | 5e  ^ | 5f  _ |
+" | 60  ` | 61  a | 62  b | 63  c | 64  d | 65  e | 66  f | 67  g |
+" | 68  h | 69  i | 6a  j | 6b  k | 6c  l | 6d  m | 6e  n | 6f  o |
+" | 70  p | 71  q | 72  r | 73  s | 74  t | 75  u | 76  v | 77  w |
+" | 78  x | 79  y | 7a  z | 7b  { | 7c  | | 7d  } | 7e  ~ | 7f del|
+" ========================================================================
+
+" ab é &eacute;
+" ab è &egrave;
+" ab à &agrave;
+" ab ù &ugrave;
+" ab ò &ograve;
+" ab ê &ecirc;
+" ab ô &ocirc;
+" ab â &acirc;
+
+" mapping ows
+map ,hta ^Iecho "<table border=\"0\" class=\"\" cellpadding=\"0\" cellspacing=\"0\"><tr><td>";<CR>echo"</td></tr></table>";<CR><ESC>B
+map ,htd ^Iecho "<td></td>";<CR><ESC>B
+map ,htr ^Iecho "<tr><td></td></tr>";<CR><ESC>B
+map ,ii i<input type=\"\" name=\"\" value=\"\"><ESC>B
+map ,ep ^iecho "<pre>";<CR>print_r();<CR>echo "</pre>";<CR><ESC>B
+map ,gf :e#<CR>
+map w :tabn<CR>
+map W :tabp<CR>
+map :tp :tabe
+map ,rm :set invpaste<CR>^I<CR>if ($_SERVER["REMOTE_ADDR"]=="88.160.186.82" \|\| $_SERVER["REMOTE_ADDR"]=="213.41.128.147") echo "";<CR><ESC>B
+map ,cm ^i########
+map ,mj ^i# ows_modif julien <ESC>:let @z=strftime("%Y-%m-%d")<Cr>"zpa<CR># fin ows_modif julien<CR><ESC>B
+map ,mp ^i# ows_modif piotre <ESC>:let @z=strftime("%Y-%m-%d")<Cr>"zpa<CR># fin ows_modif piotre<CR><ESC>B
+map ,ms ^i# ows_modif sly <ESC>:let @z=strftime("%Y-%m-%d")<Cr>"zpa<CR># fin ows_modif sly<CR><ESC>B
+map ,md ^i# ows_modif drico <ESC>:let @z=strftime("%Y-%m-%d")<Cr>"zpa<CR># fin ows_modif drico<CR><ESC>B
+map ,mb ^i# ows_modif pierre <ESC>:let @z=strftime("%Y-%m-%d")<Cr>"zpa<CR># fin ows_modif pierre<CR><ESC>B
+map ,dq :s/\$query=\(.*\);/db_query(\1);/<CR> 
+
+" fin mapping ows
+set dictionary-=/etc/vim/fonction.php.list dictionary+=/etc/vim/fonction.php.list
+" Use the dictionary completion
+set complete-=k complete+=k
+"highlight RedundantSpaces ctermbg=red guibg=red
+"match RedundantSpaces /\s\+$\| \+\ze\t\|\t/
+" HookFunc(): Drupal helper function
+function! HookFunc()
+  let f = substitute(expand("%"), ".module", "", "g")
+  return "function " . f . "_"
+endfunction
+let php_sql_query = 1
+let php_baselib = 1
+let php_htmlInStrings = 1
+let php_folding = 1
+
+set expandtab
+set tabstop=2
+set shiftwidth=2
+set autoindent
+set smartindent
+if has("autocmd")
+  " Drupal *.module and *.install files.
+  augroup module
+    autocmd BufRead,BufNewFile *.module set filetype=php
+    autocmd BufRead,BufNewFile *.install set filetype=php
+    autocmd BufRead,BufNewFile *.inc set filetype=php
+  augroup END
+endif
+syntax on
