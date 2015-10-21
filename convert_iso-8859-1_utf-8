@@ -1,0 +1,19 @@
+#!/usr/bin/perl
+#script pour les repertoires CVS recursivement
+
+$filetoconvert = $ARGV[0];
+foreach $filetoconvert (@ARGV)
+    {
+    if (-e $filetoconvert)
+        {
+        system ("cp -p $filetoconvert ".$filetoconvert."_bak");
+        system ("iconv --from-code=ISO-8859-1 --to-code=UTF-8 ".$filetoconvert." > ".$filetoconvert."_new");
+        system ("mv ".$filetoconvert."_new ".$filetoconvert);
+        print "conversion de $filetoconvert ok\n";
+        }
+    else
+        {
+        print "Le fichier $filetoconvert n'existe pas...\n";
+        }
+    }
+

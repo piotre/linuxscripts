@@ -1,0 +1,10 @@
+#!/bin/sh
+
+cp tempduhs oldtempduhs
+
+echo " " >>tempduhs
+date >>tempduhs
+du -hs *|grep G >> tempduhs
+du -hs *|grep '^[0-9][0-9][0-9]M' >> tempduhs
+du -hs .*|grep G >> tempduhs
+du -hs .*|grep '^[0-9][0-9][0-9]M' >> tempduhs

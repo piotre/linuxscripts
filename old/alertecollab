@@ -1,0 +1,31 @@
+#!/usr/bin/perl
+# ajout des  numeros d'enregistrement du moteur dans la table doc
+use DBI;
+
+my $dbh = DBI->connect("dbi:mysql:dbname=collab","phpcollab","collabght1",{RaiseError=>1, AutoCommit=>1});
+
+$query = "SELECT calendar.subject,calendar.description,calendar.date_start,calendar.date_end,members.email_work,calendar.shortname FROM calendar,members WHERE calendar.reminder='1' AND calendar.owner=members.id AND (calendar.date_start<=CURDATE() AND calendar.date_end>=CURDATE())";
+my $sth = $dbh->prepare($query);
+$sth->execute();
+while (@data = $sth->fetchrow_array)
+	{
+	print $data[0].",".$data[1].",".$data[2].",".$data[3].",".$data[4]."\n\n";
+	$email = $data[4]; 
+
+	$message = $data[1]; 
+	$subject = $data[5]; 
+
+	$headers = "MIME-Version: 1.0\r\n"; 
+	$headers .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
+	$headers .= "From:phpcollab\@zeus.fr"; 
+# 	$headers .= "Reply-To:piotre\@ows.fr"; 
+
+	open(COM1, "> /tmp/alertcollab");
+	print COM1 "<b>".$data[0]."</b><br>&nbsp;<br>".$message."<br>&nbsp;<br><a href=\"http://phpcollab.zeus.fr\">http://phpcollab.zeus.fr</a>";
+	close(COM1);
+ 	system ("mail -a '$headers' -s 'Alerte phpcollab : ".$subject."' ".$email." < /tmp/alertcollab");
+# 	sleep(1);
+	}
+
+$sth->finish;
+$dbh->disconnect;					
