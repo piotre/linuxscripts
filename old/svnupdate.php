@@ -27,7 +27,7 @@ a:hover {
 
 $svn_dir_path = $_SERVER["DOCUMENT_ROOT"];
 $svnuser="julien";
-$svnpassword="def67gh";
+$svnpassword="*******";
 #####  attention : $svn_dir_path.'/svn_log_result.log'; doit etre accessible en ecriture
 
 if (isset($_GET['a']))
